@@ -1,0 +1,6 @@
+ InitRandom seed
+
+ :If 0=≢seed ⍝ no seed: generate one
+     ⎕RL←⍬ 2 ⋄ seed←?¯2+2*31
+ :EndIf
+ ⎕RL←seed 0

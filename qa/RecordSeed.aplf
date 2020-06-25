@@ -1,0 +1,10 @@
+ RecordSeed seed;i;⎕IO
+⍝ seed: id ⎕RL
+ ⎕IO←1
+
+ :If 2=⎕NC'SEEDS'
+     :If (≢SEEDS)≥i←(⊃¨SEEDS)⍳⊃seed ⋄ (i⊃SEEDS)←seed
+     :Else ⋄ SEEDS,←⊂seed
+     :EndIf
+ :Else ⋄ SEEDS←,⊂seed
+ :EndIf

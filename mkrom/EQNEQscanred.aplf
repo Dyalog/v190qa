@@ -1,0 +1,39 @@
+ ok←EQNEQscanred seed;rank;cells;length;shape;rand0
+⍝ Validate ≠ and = scans and reductions
+
+ ⎕PATH←'#.qa'
+ ok←1
+ InitRandom seed
+
+ :For rank :In 0 1 2 3
+     cells←1↓?rank⍴10
+
+     ⍝ 1. Monadic ≠/ on ≤64 bit rows
+     :For length :In 0 1 63 64,?5⍴64
+         rand0←RandomArray 0 11(shape←cells,length)
+         ok∧←check(≠/rand0)≡(2|+/rand0)
+         ok∧←check(=/rand0)≡(~2|+/~rand0)
+     :EndFor
+
+     ⍝ 2. Dyadic ≠/ when the window spans 64 or fewer elements (64-bit builds only)
+     shape←cells,length←100
+     rand0←RandomArray 0 11 shape
+     :For length :In 0 1 63 64,?5⍴64
+         ok∧←check(length≠/rand0)≡(2|+/¨length,/rand0)
+         ok∧←check(length=/rand0)≡(~2|+/¨~length,/rand0)
+     :EndFor
+
+     ⍝ 3. ≠\ on ≥128 bit rows
+     :For length :In 128+0 1 127 128,?5⍴128
+         rand0←RandomArray 0 11(shape←cells,length)
+         ok∧←check(≠\rand0)≡(2|+\rand0)
+         ok∧←check(=\rand0)≡(~2|+\~rand0)
+     :EndFor
+
+     ⍝ 4. ≠⍀ with cell size a divisor of 32 bits
+     :For cells :In 0 1 2 4 8 16 32
+         shape←cells,1↓?rank⍴100
+         ok∧←check(≠⍀rand0)≡(2|+⍀rand0)
+         ok∧←check(=⍀rand0)≡(~2|+⍀~rand0)
+     :EndFor
+ :EndFor

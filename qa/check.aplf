@@ -1,0 +1,50 @@
+ ok←check ok;⎕IO;lc;fn;code;nq;np;im;names;valid;syms;sym;nc;val;shape;rank;subst;qt;id;i;seed;rand;type
+ →ok⍴0
+
+ ⍝ Format the failing check to make it easy to repro
+
+ ⎕IO←1
+ fn lc←2⊃¨⎕XSI ⎕LC
+ code←(⎕CR fn)[1+lc;]
+ code←(4+1⍳⍨'check'⍷code)↓code
+ nq←0=≠\code=''''             ⍝ Not quoted
+ names←nq∧code∊valid←'∆⍙_',⎕D,∊¯1 1 ⎕C¨⊂⎕A
+ nc←⎕NC syms←∪{(¯1≠⎕NC ⍵)/⍵}((2</names)⊂code)∩¨⊂valid
+ rand←0⍴⊂''
+
+ :For sym :In syms ⍝ try to replace each sym with something more useful
+     :Trap 999
+         subst←''
+         rank←≢shape←⍴val←1(86⌶)sym
+         :Select rank
+         :Case 0 ⋄ qt←((⎕DR val)∊80 82)/'''' ⋄ subst←qt,(⍕val),qt
+         :Case 1
+             :If (0=1↑0⍴val)∧10=≥≢val
+                 val←(⍕val),(0=≢val)/'⍬'
+             :EndIf
+         :EndSelect
+
+         :If (0=≢subst)∧('rand'≡4↑sym)∧(1⊃⎕VFI 4↓sym) ⍝ 'randN'
+             id←2⊃⎕VFI 4⊃sym
+         :AndIf (≢SEEDS)≥i←(⊃¨SEEDS)⍳id
+             (id type shape seed)←i⊃SEEDS
+             rand,←⊂sym,'←',(⍕⊃seed),' RandomArray 0 ',(⍕type),' (',(⍕shape),')'
+         :EndIf
+
+     :EndTrap
+     :If 0≠≢subst
+         code←(sym ⎕R subst)code
+     :EndIf
+ :EndFor
+
+ nq←0=≠\code=''''             ⍝ Not quoted
+ np←0=+\nq×1 ¯1 0['()'⍳code]  ⍝ Not parenthesised
+ im←1⍳⍨np∧code='≡'            ⍝ 1st ≡ symbol
+
+ ⎕←'*** test failed at ',fn,'[',(⍕lc),'] ***'
+ ⎕←'Result of . . :    ',1↓(im-2)↑code
+ ⎕←'Did not match :    ',{')('≡2↑¯1⌽⍵:1↓¯1↓⍵ ⋄ ⍵}{(-+/∧\' '=⌽⍵)↓⍵}im↓code
+ :If 0≠⍴rand
+     ⎕←((≢rand)↑⊂'   ... where :  '),⍪rand
+ :EndIf
+ ⎕←''
