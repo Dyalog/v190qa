@@ -9,7 +9,7 @@
  ⎕PATH←'#.qa'
  ok←⎕IO←⎕ML←1
  InitRandom seed
- eop←{r←((⍴⍺),⍴⍵)⍴⍵ ⋄ q←⍺∘.+(⍴⍵)⍴0 ⋄ q ⍺⍺ r} ⍝ emulate outer product using ⍺⍺ (it uses out product, too - but not for the calculation itself!)
+ eop←{r←((⍴⍺),⍴⍵)⍴⍵ ⋄ q←⍺∘.+(⍴⍵)⍴0 ⋄ q ⍺⍺ a} ⍝ emulate outer product using ⍺⍺ (it uses outer product, too - but not for the calculation itself!)
  :For rank :In ⍳7
      cells←1↓?rank⍴10
      rand1←RandomArray 1 11(?5)
