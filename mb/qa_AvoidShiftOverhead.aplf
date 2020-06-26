@@ -12,12 +12,12 @@
  eop←{r←((⍴⍺),⍴⍵)⍴⍵ ⋄ q←⍺∘.+(⍴⍵)⍴0 ⋄ r ⍺⍺ q} ⍝ emulate outer product using ⍺⍺ (it uses out product, too - but not for the calculation itself!)
  :For rank :In ⍳7
      cells←1↓?rank⍴10
-     rand1←RandomArray 1 11(?10)
+     rand1←RandomArray 1 11(?5)
      :For length :In 2 7 8 9 15 16 17 31 32 33 63 64,?5⍴64
          rand0←RandomArray 0 11(shape←cells,length)
          ok∧←check(rand1∘.=rand0)≡rand1(=eop)rand0
          ok∧←check(rand1∘.≠rand0)≡rand1(≠eop)rand0
-         ok∧←check(rand1∘.^rand0)≡rand1(^eop)rand0
+         ok∧←check(rand1∘.∧rand0)≡rand1(∧eop)rand0
          ok∧←check(rand1∘.∨rand0)≡rand1(∨eop)rand0
          ok∧←check(rand1∘.⍱rand0)≡rand1(⍱eop)rand0
          ok∧←check(rand1∘.⍲rand0)≡rand1(⍲eop)rand0
