@@ -27,7 +27,7 @@
              :EndIf
          :EndSelect
 
-         :If (0=≢subst)∧('rand'≡4↑sym)∧(1⊃⎕VFI 4↓sym) ⍝ 'randN'
+         :If (0=≢subst)∧('rand'≡4↑sym)∧(1↑1⊃⎕VFI 4↓sym) ⍝ 'randN'
              id←2⊃⎕VFI 4⊃sym
          :AndIf (≢SEEDS)≥i←(⊃¨SEEDS)⍳id
              (id type shape seed)←i⊃SEEDS
