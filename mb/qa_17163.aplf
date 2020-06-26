@@ -31,8 +31,9 @@
                      ⍝                     ok∧←check (⌈1-smf)≡1
                      ⍝                     ok∧←check (⌈smf)≡1
                      :EndIf
-                     ok∧←check(⌊rand0)≡⌊¨rand0
-                     ok∧←check(⌈rand0)≡⌈¨rand0
+                     ok^←check(,⌈rand0)≡∊⌈↓rand0
+                     ok^←check(,⌊rand0)≡∊⌊↓rand0
+                     ok^←check(,⌊.5+rand0)≡∊⌊↓rand0+.5
                  :EndFor
              :EndFor
          :EndFor
