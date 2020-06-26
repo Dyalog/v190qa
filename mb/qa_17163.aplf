@@ -1,34 +1,39 @@
- ok←qa_17163 seed;type;rank;cells;length;rand0;⎕FR;smf;⎕ct;⎕dct
+ ok←qa_17163 seed;type;rank;cells;length;rand0;⎕FR;smf;ct;default_ct
 ⍝ "New style" (using tools in #.qa)
 ⍝ 017163: Vectorised floor and ceiling
 
 
  ⎕PATH←'#.qa'
  ok←⎕IO←⎕ML←1
- ⎕dct←⎕CT←0 ⍝ is it fair to expect absolute precision? (I think so, but I've been wrong before...)
  InitRandom seed
  :For ⎕FR :In 645 1287
-    ⍝ WIBNI the check-msgs would also show the currentr value of ⎕FR.
+    ⍝ WIBNI the check-msgs would also show the current value of ⎕FR.
     ⍝ Maybe the test-fn can have a var "AddMeToLoggingOutput" or possibly less verbose - but you get the idea: a simple vtv that should be added to the output
     ⍝ the smallest float that we represent with full precision (this assumption needs verification!!!)
      smf←⍬⍴10*-(¯14 ¯27)[645 1287⍳⎕FR]
       ⍝ ↑↑↑↑↑↑ well, that was the idea. But we get LOTS of errors with that computation.
       ⍝ Let's use a safe value to show that the test CAN actually work: (switch to 10*¯7 and errors will show!)
-     smf←⍬⍴10*¯6
-     :For type :In 645 1287 323
-         :For rank :In 0 1 2 3
-             cells←1↓?rank⍴10
+     default_ct←{⍵=645:⎕CT ⋄ ⎕DCT}⎕FR
+     smf←⍬⍴10*¯6  ⍝ perhaps it should depend on ct?
+     :For ct :In 0,default_ct
+         :If ⎕FR=645 ⋄ ⎕CT←ct ⋄ :Else ⋄ ⎕DCT←ct ⋄ :EndIf ⍝ WIBNI we could log the value of ⎕CT?
+         :For type :In 645 1287 323
+             :For rank :In 0 1 2 3
+                 cells←1↓?rank⍴10
 
-             :For length :In 0 1 63 64,?5⍴64
-                 rand0←RandomArray 0 type(shape←cells,length)
-                 :If type=323       ⍝ if type is int - generate the smallest float
-                     rand0+←smf     ⍝ careful - this means we can't use the "default-constrction" of rand0 as the err will show it.
+                 :For length :In 0 1 63 64,?5⍴64
+                     rand0←RandomArray 0 type(shape←cells,length)
+                     :If type=323       ⍝ if type is int - generate the smallest float
+                         rand0+←smf     ⍝ careful - this means we can't use the "default-constrction" of rand0 as the err will show it.
                                     ⍝ Maybe we should have a special "type" for RandomArray to create an array of int+"officially approved smallest float"?
-                     ok∧←check (⌊smf)≡0
-                     ok∧←check (⌈1-smf)≡1
-                     ok∧←check (⌈smf)≡1
-                 :EndIf
-                 ok∧←check(⌊1+rand0)≡⌈rand0    ⍝ can't use quotes in comments!
+                     ⍝ these tests are not relevant - no need to do basic QAs here...
+                     ⍝                     ok∧←check (⌊smf)≡0
+                     ⍝                     ok∧←check (⌈1-smf)≡1
+                     ⍝                     ok∧←check (⌈smf)≡1
+                     :EndIf
+                     ok∧←check(⌊rand0)≡⌊¨rand0
+                     ok∧←check(⌈rand0)≡⌈¨rand0
+                 :EndFor
              :EndFor
          :EndFor
      :EndFor
