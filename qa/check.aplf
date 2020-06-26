@@ -1,4 +1,4 @@
- ok←check ok;⎕IO;lc;fn;code;nq;np;im;names;valid;syms;sym;nc;val;shape;rank;subst;qt;id;i;seed;rand;type
+ ok←check ok;⎕IO;lc;fn;code;nq;np;im;names;valid;syms;sym;nc;val;shape;rank;subst;qt;id;i;seed;rand;type;deparen;dlb
  →ok⍴0
 
  ⍝ Format the failing check to make it easy to repro
@@ -43,10 +43,12 @@
  nq←0=≠\code=''''             ⍝ Not quoted
  np←0=+\nq×1 ¯1 0['()'⍳code]  ⍝ Not parenthesised
  im←1⍳⍨np∧code='≡'            ⍝ 1st ≡ symbol
+ deparen←{')('≡2↑¯1⌽⍵:1↓¯1↓⍵ ⋄ ⍵}
+ dlb←{(+/∧\⍵=' ')↓⍵}
 
  ⎕←'*** test failed at ',fn,'[',(⍕lc),'] ***'
- ⎕←'Result of . . :    ',1↓(im-2)↑code
- ⎕←'Did not match :    ',{')('≡2↑¯1⌽⍵:1↓¯1↓⍵ ⋄ ⍵}{(-+/∧\' '=⌽⍵)↓⍵}im↓code
+ ⎕←'Result of . . :    ',deparen dlb (im-1)↑code
+ ⎕←'Did not match :    ',deparen dlb {(-+/∧\' '=⌽⍵)↓⍵}im↓code
  :If 0≠⍴rand
      ⎕←((≢rand)↑⊂'   ... where :  '),⍪rand
  :EndIf
