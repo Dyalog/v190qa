@@ -1,0 +1,22 @@
+ ok←qa_TackJot seed;type;rank;cells;length;rand0;⎕FR;smf;ct;default_ct;rand1;eop
+⍝ "New style" (using tools in #.qa)
+⍝ Fast code for ∘.⊣ and ∘.⊢ based on reshape or replicate
+
+
+ ⎕PATH←'#.qa'
+ ok←⎕IO←⎕ML←1
+ InitRandom seed
+ eop←{r←((⍴⍺),⍴⍵)⍴⍵ ⋄ q←⍺∘.+(⍴⍵)⍴0 ⋄ q ⍺⍺ r} ⍝ emulate outer product using ⍺⍺ (it uses out product, too - but not for the calculation itself!)
+ :For rank :In ⍳3
+     :For type :In 11 323 645
+         cells←1↓?rank⍴10
+         rand1←RandomArray 1 type (?rank⍴20)
+         :For length :In 2 7 8 9 15 16 17 31 32 33 63 64,?5⍴64
+             rand0←RandomArray 0 type(shape←cells,length)
+             ok∧←check(rand1∘.⊣rand0)≡rand1(⊣eop)rand0
+             ok∧←check(rand1∘.⊢rand0)≡rand1(⊢eop)rand0
+             ok∧←check(rand0∘.⊣rand1)≡rand0(⊣eop)rand1
+             ok∧←check(rand0∘.⊢rand1)≡rand0(⊢eop)rand1
+         :EndFor
+     :EndFor
+ :EndFor
