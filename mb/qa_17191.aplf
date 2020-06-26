@@ -18,7 +18,7 @@
      :For ct :In 0,default_ct
          :If ⎕FR=645 ⋄ ⎕CT←ct ⋄ :Else ⋄ ⎕DCT←ct ⋄ :EndIf ⍝ WIBNI we could log the value of ⎕CT?
          :For type :In 11 645 1287 323
-             :For rank :In   1+⍳5   ⍝ test rank 2..7
+             :For rank :In 1+⍳5   ⍝ testing rank 2..6
                  cells←1↓?rank⍴10
 
                  :For length :In 2 31 32 33 63 64,?5⍴64
