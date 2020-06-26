@@ -8,7 +8,10 @@
  code←(⎕CR fn)[1+lc;]
  code←(4+1⍳⍨'check'⍷code)↓code
  nq←0=≠\code=''''             ⍝ Not quoted
+ code←code↑⍨¯1+(nq∧code='⍝')⍳1
+ nq←(≢code)↑nq
  names←nq∧code∊valid←'∆⍙_',⎕D,∊¯1 1 ⎕C¨⊂⎕A
+
  nc←⎕NC syms←∪{(¯1≠⎕NC ⍵)/⍵}((2</names)⊂code)∩¨⊂valid
  rand←0⍴⊂''
 
