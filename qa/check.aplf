@@ -19,7 +19,7 @@
          :Select rank
          :Case 0 ⋄ qt←((⎕DR val)∊80 82)/'''' ⋄ subst←qt,(⍕val),qt
          :Case 1
-             :If (0=1↑0⍴val)∧10=≥≢val
+             :If (0=1↑0⍴val)∧10≥≢val
                  val←(⍕val),(0=≢val)/'⍬'
              :EndIf
          :EndSelect
