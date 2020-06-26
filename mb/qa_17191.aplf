@@ -1,0 +1,54 @@
+ ok←qa_17191 seed;type;rank;cells;length;rand0;⎕FR;smf;ct;default_ct
+⍝ "New style" (using tools in #.qa)
+⍝ 0017191: Deltas (2-⍨/) could be faster
+
+
+ ⎕PATH←'#.qa'
+ ok←⎕IO←⎕ML←1
+ InitRandom seed
+ :For ⎕FR :In 645 1287
+    ⍝ WIBNI the check-msgs would also show the current value of ⎕FR.
+    ⍝ Maybe the test-fn can have a var "AddMeToLoggingOutput" or possibly less verbose - but you get the idea: a simple vtv that should be added to the output
+    ⍝ the smallest float that we represent with full precision (this assumption needs verification!!!)
+     smf←⍬⍴10*-(¯14 ¯27)[645 1287⍳⎕FR]
+      ⍝ ↑↑↑↑↑↑ well, that was the idea. But we get LOTS of errors with that computation.
+      ⍝ Let's use a safe value to show that the test CAN actually work: (switch to 10*¯7 and errors will show!)
+     default_ct←{⍵=645:⎕CT ⋄ ⎕DCT}⎕FR
+     smf←⍬⍴10*¯6  ⍝ perhaps it should depend on ct?
+     :For ct :In 0,default_ct
+         :If ⎕FR=645 ⋄ ⎕CT←ct ⋄ :Else ⋄ ⎕DCT←ct ⋄ :EndIf ⍝ WIBNI we could log the value of ⎕CT?
+         :For type :In 11 645 1287 323
+             :For rank :In   1+⍳5   ⍝ test rank 2..7
+                 cells←1↓?rank⍴10
+
+                 :For length :In 2 31 32 33 63 64,?5⍴64
+                     rand0←RandomArray 0 type(shape←cells,length)
+                     :If type=323       ⍝ if type is int - generate the smallest float
+                         rand0+←smf     ⍝ careful - this means we can't use the "default-constrction" of rand0 as the err will show it.
+                                    ⍝ Maybe we should have a special "type" for RandomArray to create an array of int+"officially approved smallest float"?
+                     ⍝ these tests are not relevant - no need to do basic QAs here...
+                     ⍝                     ok∧←check (⌊smf)≡0
+                     ⍝                     ok∧←check (⌈1-smf)≡1
+                     ⍝                     ok∧←check (⌈smf)≡1
+                     :EndIf
+                     ok∧←check(2-/rand0)≡(¯1↓[rank]rand0)-1↓[rank]rand0
+                     ok∧←check(2+/rand0)≡(¯1↓[rank]rand0)+1↓[rank]rand0
+                     ok∧←check(2×/rand0)≡(¯1↓[rank]rand0)×1↓[rank]rand0
+                     ok∧←check(2⌊/rand0)≡(¯1↓[rank]rand0)⌊1↓[rank]rand0
+                     ok∧←check(2</rand0)≡(¯1↓[rank]rand0)<1↓[rank]rand0
+                     ok∧←check(2>/rand0)≡(¯1↓[rank]rand0)>1↓[rank]rand0
+                     ok∧←check(2≤/rand0)≡(¯1↓[rank]rand0)≤1↓[rank]rand0
+                     ok∧←check(2≥/rand0)≡(¯1↓[rank]rand0)≥1↓[rank]rand0
+                     ok∧←check(2=/rand0)≡(¯1↓[rank]rand0)=1↓[rank]rand0
+                     ok∧←check(2≠/rand0)≡(¯1↓[rank]rand0)≠1↓[rank]rand0
+                     :If type=11
+                         ok∧←check(2∧/rand0)≡(¯1↓[rank]rand0)∧1↓[rank]rand0
+                         ok∧←check(2∨/rand0)≡(¯1↓[rank]rand0)∨1↓[rank]rand0
+                         ok∧←check(2⍱/rand0)≡(¯1↓[rank]rand0)⍱1↓[rank]rand0
+                         ok∧←check(2⍲/rand0)≡(¯1↓[rank]rand0)⍲1↓[rank]rand0
+                     :EndIf
+                 :EndFor
+             :EndFor
+         :EndFor
+     :EndFor
+ :EndFor
