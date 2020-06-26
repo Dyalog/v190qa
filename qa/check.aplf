@@ -18,22 +18,24 @@
  :For sym :In syms ⍝ try to replace each sym with something more useful
      :Trap 999
          subst←''
-         rank←≢shape←⍴val←1(86⌶)sym
-         :Select rank
-         :Case 0 ⋄ qt←((⎕DR val)∊80 82)/'''' ⋄ subst←qt,(⍕val),qt
-         :Case 1
-             :If (0=1↑0⍴val)∧10≥≢val
-                 val←(⍕val),(0=≢val)/'⍬'
+         ⎕EX'val' ⋄ val←1(86⌶)sym
+         :If 2=⎕NC'val'
+             rank←≢shape←⍴val
+             :Select rank
+             :Case 0 ⋄ qt←((⎕DR val)∊80 82)/'''' ⋄ subst←qt,(⍕val),qt
+             :Case 1
+                 :If (0=1↑0⍴val)∧10≥≢val
+                     val←(⍕val),(0=≢val)/'⍬'
+                 :EndIf
+             :EndSelect
+
+             :If (0=≢subst)∧('rand'≡4↑sym)∧(1↑1⊃⎕VFI 4↓sym) ⍝ 'randN'
+                 id←2⊃⎕VFI 4⊃sym
+             :AndIf (≢SEEDS)≥i←(⊃¨SEEDS)⍳id
+                 (id type shape seed)←i⊃SEEDS
+                 rand,←⊂sym,'←',(⍕⊃seed),' RandomArray 0 ',(⍕type),' (',(⍕shape),')'
              :EndIf
-         :EndSelect
-
-         :If (0=≢subst)∧('rand'≡4↑sym)∧(1↑1⊃⎕VFI 4↓sym) ⍝ 'randN'
-             id←2⊃⎕VFI 4⊃sym
-         :AndIf (≢SEEDS)≥i←(⊃¨SEEDS)⍳id
-             (id type shape seed)←i⊃SEEDS
-             rand,←⊂sym,'←',(⍕⊃seed),' RandomArray 0 ',(⍕type),' (',(⍕shape),')'
          :EndIf
-
      :EndTrap
      :If 0≠≢subst
          code←(sym ⎕R subst)code
@@ -47,8 +49,8 @@
  dlb←{(+/∧\⍵=' ')↓⍵}
 
  ⎕←'*** test failed at ',fn,'[',(⍕lc),'] ***'
- ⎕←'Result of . . :    ',deparen dlb (im-1)↑code
- ⎕←'Did not match :    ',deparen dlb {(-+/∧\' '=⌽⍵)↓⍵}im↓code
+ ⎕←'Result of . . :    ',deparen dlb(im-1)↑code
+ ⎕←'Did not match :    ',deparen dlb{(-+/∧\' '=⌽⍵)↓⍵}im↓code
  :If 0≠⍴rand
      ⎕←((≢rand)↑⊂'   ... where :  '),⍪rand
  :EndIf
