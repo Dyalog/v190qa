@@ -1,0 +1,25 @@
+ ok←qa_AvoidShiftOverhead seed;type;rank;cells;length;rand0;⎕FR;smf;ct;default_ct;rand1;eop
+⍝ "New style" (using tools in #.qa)
+⍝ Reuse result rows in boolean outer products when possible (avoids shift overhead)
+⍝ Not sure how to design a test where we could be sure result rows ARE re-used.
+⍝ Will just perform outer products of vector against random array of varying rank and compare that
+⍝ to the result of a calculation that does not use ∘.
+
+
+ ⎕PATH←'#.qa'
+ ok←⎕IO←⎕ML←1
+ InitRandom seed
+ eop←{r←((⍴⍺),⍴⍵)⍴⍵ ⋄ q←⍺∘.+(⍴⍵)⍴0 ⋄ r ⍺⍺ q} ⍝ emulate outer product using ⍺⍺ (it uses out product, too - but not for the calculation itself!)
+ :For rank :In ⍳7
+     cells←1↓?rank⍴10
+     rand1←RandomArray 1 11(?10)
+     :For length :In 2 7 8 9 15 16 17 31 32 33 63 64,?5⍴64
+         rand0←RandomArray 0 11(shape←cells,length)
+         ok∧←check(rand1∘.=rand0)≡rand1(=eop)rand0
+         ok∧←check(rand1∘.≠rand0)≡rand1(≠eop)rand0
+         ok∧←check(rand1∘.^rand0)≡rand1(^eop)rand0
+         ok∧←check(rand1∘.∨rand0)≡rand1(∨eop)rand0
+         ok∧←check(rand1∘.⍱rand0)≡rand1(⍱eop)rand0
+         ok∧←check(rand1∘.⍲rand0)≡rand1(⍲eop)rand0
+     :EndFor
+ :EndFor
