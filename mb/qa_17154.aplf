@@ -1,0 +1,36 @@
+ ok←qa_17154 seed;type;rank;cells;length;rand0;z1;x;base;in
+⍝ "0017154: Log and Power could be faster"
+⍝ so all we can do is test for correct results.
+⍝ Since this also does ÷x, I dare to say this can also be used to test 17159
+⍝ "0017159: Fast division by constant using fused multiply-add"
+⍝
+⍝ while it was clear with other tests that the emphasis was (i.e.) on vectorised rewrites,
+⍝ this one seems to be pretty fundamental. We will just assume that the basic functionality
+⍝ is tested by existing QAs and just concentrate on comparing result of different approaches
+⍝ which should give the same result.
+
+
+ ⎕PATH←'#.qa'
+ ok←⎕IO←⎕ML←1
+ InitRandom seed
+ :for c :in ⍳10000
+ :For type :In 645 1287 323
+     :For rank :In  1 2 3 4
+         cells←1↓?rank⍴10
+
+         :For length :In 0 1 63 64,?5⍴64
+             rand0←RandomArray 0 type(shape←cells,length)
+             :For base :In 2 3 10(○1)
+                 x←⍟base
+                 z1←base⍟rand0
+
+                 ok∧←check((⍟rand0)÷x)≡(base⍟rand0)  ⍝ a⍟x = (a⍟x)÷a⍟b
+                 ok∧←check((⍟rand0)÷x)≡(⍟rand0)×÷x ⍝ (a÷x) = a×1÷x
+                 ok∧←check(base*z1)≡rand0   ⍝ log and power should return original array
+                 ⍝ anything else we could test???
+
+             :EndFor
+         :EndFor
+     :EndFor
+ :EndFor
+ :endfor
