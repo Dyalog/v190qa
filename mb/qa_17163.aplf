@@ -1,7 +1,5 @@
  ok←qa_17163 seed;type;rank;cells;length;rand0;⎕FR;smf;ct;default_ct
-⍝ "New style" (using tools in #.qa)
 ⍝ 017163: Vectorised floor and ceiling
-
 
  ⎕PATH←'#.qa'
  ok←⎕IO←⎕ML←1

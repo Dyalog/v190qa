@@ -1,7 +1,5 @@
  ok←qa_17191 seed;type;rank;cells;length;rand0;⎕FR;smf;ct;default_ct
-⍝ "New style" (using tools in #.qa)
 ⍝ 0017191: Deltas (2-⍨/) could be faster
-
 
  ⎕PATH←'#.qa'
  ok←⎕IO←⎕ML←1
@@ -26,10 +24,6 @@
                      :If type=323       ⍝ if type is int - generate the smallest float
                          rand0+←smf     ⍝ careful - this means we can't use the "default-constrction" of rand0 as the err will show it.
                                     ⍝ Maybe we should have a special "type" for RandomArray to create an array of int+"officially approved smallest float"?
-                     ⍝ these tests are not relevant - no need to do basic QAs here...
-                     ⍝                     ok∧←check (⌊smf)≡0
-                     ⍝                     ok∧←check (⌈1-smf)≡1
-                     ⍝                     ok∧←check (⌈smf)≡1
                      :EndIf
                      ok∧←check(2-/rand0)≡(¯1↓[rank]rand0)-1↓[rank]rand0
                      ok∧←check(2+/rand0)≡(¯1↓[rank]rand0)+1↓[rank]rand0

@@ -4,6 +4,7 @@
 ⍝
 ⍝ also covers 	
 ⍝     0015054: Unify ways of selecting a single column
+⍝     0016796: Stop using the SI stack for indices in squad indexing
 
 
 ⍝ Tests with "small subarrays" (16 bytes)

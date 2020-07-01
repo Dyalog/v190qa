@@ -1,7 +1,5 @@
  ok←qa_OuterMath seed;type;rank;cells;length;rand0;⎕FR;smf;ct;default_ct;rand1;eop
-⍝ "New style" (using tools in #.qa)
 ⍝ fast code for ∘.+ ∘.- ∘.× using ahead-of-time range checking and vectorised arithmetic
-
 
  ⎕PATH←'#.qa'
  ok←⎕IO←⎕ML←1

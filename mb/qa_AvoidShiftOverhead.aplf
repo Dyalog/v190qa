@@ -1,5 +1,4 @@
  ok←qa_AvoidShiftOverhead seed;type;rank;cells;length;rand0;⎕FR;smf;ct;default_ct;rand1;eop
-⍝ "New style" (using tools in #.qa)
 ⍝ Reuse result rows in boolean outer products when possible (avoids shift overhead)
 ⍝ Not sure how to design a test where we could be sure result rows ARE re-used.
 ⍝ Will just perform outer products of vector against random array of varying rank and compare that

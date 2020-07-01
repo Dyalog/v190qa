@@ -1,7 +1,5 @@
  ok←qa_TackJot seed;type;rank;cells;length;rand0;⎕FR;smf;ct;default_ct;rand1;eop
-⍝ "New style" (using tools in #.qa)
 ⍝ Fast code for ∘.⊣ and ∘.⊢ based on reshape or replicate
-
 
  ⎕PATH←'#.qa'
  ok←⎕IO←⎕ML←1
