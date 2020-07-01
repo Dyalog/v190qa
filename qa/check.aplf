@@ -1,4 +1,4 @@
- ok←check ok;⎕IO;lc;fn;code;nq;np;im;names;valid;syms;sym;nc;val;shape;rank;subst;qt;id;i;seed;rand;type;deparen;dlb
+ ok←check ok;⎕IO;lc;fn;code;nq;np;im;names;valid;syms;sym;nc;val;shape;rank;subst;qt;id;i;seed;rand;type;deparen;dlb;m
  →ok⍴0
 
  ⍝ Format the failing check to make it easy to repro
@@ -10,9 +10,9 @@
  nq←0=≠\code=''''             ⍝ Not quoted
  code←code↑⍨¯1+(nq∧code='⍝')⍳1
  nq←(≢code)↑nq
- names←nq∧code∊valid←'∆⍙_',⎕D,∊¯1 1 ⎕C¨⊂⎕A
-
- nc←⎕NC syms←∪{(¯1≠⎕NC ⍵)/⍵}((2</names)⊂code)∩¨⊂valid
+ names←nq∧code∊valid←'⎕∆⍙_',⎕D,∊¯1 1 ⎕C¨⊂⎕A
+ m←2</names
+ nc←⎕NC syms←∪{(¯1≠⎕NC ⍵)/⍵}((m⊂names)/¨m⊂code)∩¨⊂valid
  rand←0⍴⊂''
 
  :For sym :In syms ⍝ try to replace each sym with something more useful
@@ -45,6 +45,12 @@
  nq←0=≠\code=''''             ⍝ Not quoted
  np←0=+\nq×1 ¯1 0['()'⍳code]  ⍝ Not parenthesised
  im←1⍳⍨np∧code='≡'            ⍝ 1st ≡ symbol
+:If ' '∧.=im↓code
+    im←1⍳⍨np∧code='='            ⍝ No ≡, try =
+:AndIf ' '∧.=im↓code
+    'No ≡ or = found' ⎕SIGNAL 11
+:EndIf
+
  deparen←{')('≡2↑¯1⌽⍵:1↓¯1↓⍵ ⋄ ⍵}
  dlb←{(+/∧\⍵=' ')↓⍵}
 
