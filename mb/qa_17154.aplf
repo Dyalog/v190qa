@@ -10,15 +10,14 @@
 ⍝ which should give the same result. If anyone has more ideas on how to test * or ⍟, please
 ⍝ feel free to add to this...
 
-
  ⎕PATH←'#.qa'
  ok←⎕IO←⎕ML←1
  InitRandom seed
- :For type :In 645 1287 323
+ :For type :In 11 323 645 1287
      :For rank :In  1 2 3 4
          cells←1↓?rank⍴10
          :For length :In 0 1 7 8 9 15 16 17 31 32 33 63 64 65,?5⍴129
-             rand0←RandomArray 0 type(shape←cells,length)
+             rand0←1⌈RandomArray 0 type(shape←cells,length)  ⍝ 1⌈ sort of defeats the purpose, but its the only way to test boolean data w/o crashing on 0
              :For base :In 2 3 10(○1)
                  x←⍟base
                  z1←base⍟rand0
