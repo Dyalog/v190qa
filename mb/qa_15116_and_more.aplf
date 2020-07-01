@@ -1,0 +1,114 @@
+ ok←qa_15116_and_more seed;mat;data;⎕ML;⎕IO;rho;rand1;ind;i2;res;CR;t;i1;offset;shape;d;col;Comp;col∆
+⍝ SSSE3 code for transposing many ≤16-byte matrices provided leading axes don't change
+⍝ http://mantis.dyalog.com/view.php?id=15116
+⍝
+⍝ also covers 	
+⍝     0015054: Unify ways of selecting a single column
+
+
+⍝ Tests with "small subarrays" (16 bytes)
+⍝ Nobody seems to know what exactly "small" means - my assumption is 16bytes of data (i.e. 128 booleans or 2 64bit floats etc.)
+
+
+ ⎕IO←⎕ML←1
+ CR←⎕UCS 13
+
+ ⎕PATH←'#.qa'
+ ok←⎕IO←⎕ML←1
+ InitRandom seed
+
+ :For type :In 11(⎕DR' ')83 163 323 645 1287
+     ⎕FR←(1287 645)[(,1287)⍳type]
+     :For rho :In 1 2 4 8 16 128       ⍝ try to find a rho which gives us "small rows" (48= 16 bytes of data + "32 admin-bytes")
+         d←RandomArray 0 type(rho)
+         :If 48=⎕SIZE'd' ⋄ :Leave ⋄ :EndIf
+     :EndFor
+     :For offset :In 0 ¯1 1  ⍝ try the exact number of columns and also one more or less...
+         shape←2↑?100        ⍝ and a random number of rows
+         shape[2]←rho+offset
+         rand1←RandomArray 1 type shape  ⍝ change name to rand1
+
+         i2←?⍨shape[2]  ⍝ random col-indices
+         i1←?100⍴shape[1]  ⍝ random col-indices
+
+ ⍝### Build array for comparison
+         Comp←rand1[;⍳0]
+         :For col :In i2
+             Comp,←rand1[;,col]
+         :EndFor
+
+         ok∧←check Comp≡rand1[;i2]
+
+
+⍝### Test squad-indexing
+         Comp←(⊂i2)⌷[2]rand1
+         ok∧←check Comp≡rand1[;i2]
+
+⍝### Test squad-indexing of transposed array
+         Comp←⍉(⊂i1)⌷[2]⍉rand1
+         ok∧←check Comp≡rand1[i1;]
+
+
+ ⍝### Build array for comparison (using ⌷ on single columns)
+         Comp←rand1[;⍳0]
+         :For col :In i2
+             Comp,←col⌷[2]rand1
+         :EndFor
+         ok∧←check rand1[;i2]≡Comp
+
+    ⍝ index into smalls rows with small row result
+         res←i1[1]⌷[1]rand1
+         :If offset=0
+             ok∧←check(,48)≡⎕SIZE'res'       ⍝ ensure small-rowness of result
+         :EndIf
+         ok∧←check(rand1[i1[1];])≡res
+     :EndFor
+
+⍝### Rotate, take & drop on small rows
+
+     :For col :In ⍳shape[2]
+         Comp←rand1[;⍳0]
+         :For col∆ :In col⌽⍳shape[2]
+             Comp,←rand1[;col∆]
+         :EndFor
+         ok∧←check Comp≡col⌽rand1
+
+         Comp←col↑[2]rand1
+         ok∧←check Comp≡rand1[;⍳col]
+
+         Comp←col↓[2]rand1
+         ok∧←check Comp≡rand1[;col↓⍳shape[2]]
+         :If col=1    ⍝ test selecting first column
+             Comp←rand1[;1]
+             ok∧←check Comp≡⊣/rand1
+             ok∧←check Comp≡(⊢(/⍨)(shape[2]↑1)⍴⍨≢),rand1
+         :ElseIf col=shape[2]   ⍝ and last column
+             Comp←rand1[;col]
+             ok∧←check Comp≡⊢/rand1
+             ok∧←check Comp≡(⊢(/⍨)(1↑⍨-shape[2])⍴⍨≢),rand1
+         :EndIf
+
+     :EndFor
+
+⍝### Reverse on small rows
+     Comp←rand1[;⍳0]
+     :For col∆ :In ⌽⍳shape[2]
+         Comp,←rand1[;col∆]
+     :EndFor
+     ok∧←check Comp≡⌽rand1
+
+
+
+⍝### Compress on 8-byte or 16-byte data, using a lookup table.
+⍝ "I would put that one aside for now and move onto the next one.
+⍝ You get more from looking at the individual commit messages but even so I think it's one to talk to others about."  (AS)
+
+⍝###  Transpose on small submatrices (requires leading axes are not transposed).
+⍝ Eh? Putting it aside as well...
+
+
+⍝### SSSE3 code for indexing which selects columns
+⍝ Not sure - perhaps it's been addressed by the reverse-tests etc. already?
+
+
+ :EndFor
