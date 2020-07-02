@@ -1,0 +1,12 @@
+ r←type DR bits;width;⎕IO;n;b;⎕FR
+ ⎕IO←0 ⋄ ⎕FR←(645 1287⍳⎕FR)⊃645 1287 ⎕FR
+ width←⌊0.1×type
+ :Trap 0
+     r←type ⎕DR bits
+ :Else
+     :If width=n←≢bits
+         r←⊃type DR b←?width⍴2
+     :Else
+         r←∊type DR¨↓((n÷width),width)⍴bits
+     :EndIf
+ :EndTrap
