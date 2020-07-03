@@ -1,4 +1,4 @@
- array←{seed}RandomArray(id types shape);⎕FR;⎕IO;i;type;subinds;subarray;cols;last;n;t;chunk;width;force;multiple
+ array←{seed}RandomArray(id types shape);⎕FR;⎕IO;i;type;subinds;subarray;cols;last;n;t;chunk;width;force;multiple;seedValue
  ⍝ id is used as a suffix for variable names to make it easier to reproduce a failure
  ⍝    when calling RandomArray, the result should assigned randXXX where XXX is the id provided
  ⍝ types can either be a single type or vector of types
@@ -14,7 +14,7 @@
  :Else ⋄ RecordSeed id types shape ⎕RL  ⍝ Record mode
  :EndIf
 
- seed←{
+ seedValue←{
  ⍝ return seed value for datatype to prevent compaction
      d←⎕DR ⍵
      d∊645 1287:?0⊣⎕FR←⊃(d∊645 1287)↓⎕FR,d
@@ -35,11 +35,11 @@
  :EndSelect
 
  array←shape⍴array
+ →0⍴⍨0∊shape
+
  multiple←1<≢types
- :If ~0∊shape
-     force←?shape
-     array[⊂force]←seed array ⍝ force at least one element to be non-compactible (if applicable)
- :EndIf
+ force←?shape
+ array[⊂force]←seedValue array ⍝ force at least one element to be non-compactible (if applicable)
 
  →0⍴⍨1=t←≢types  ⍝ multiple types?
 
