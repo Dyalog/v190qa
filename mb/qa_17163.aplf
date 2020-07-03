@@ -15,7 +15,7 @@
      smf←⍬⍴10*¯6  ⍝ perhaps it should depend on ct?
      :For ct :In 0,default_ct
          :If ⎕FR=645 ⋄ ⎕CT←ct ⋄ :Else ⋄ ⎕DCT←ct ⋄ :EndIf ⍝ WIBNI we could log the value of ⎕CT?
-         :For type :In 645 1287 323
+         :For type :In  323,⎕FR
              :For rank :In 0 1 2 3
                  cells←1↓?rank⍴10
 
