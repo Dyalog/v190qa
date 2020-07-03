@@ -1,5 +1,5 @@
  ok←EQNEQscanred seed;rank;cells;length;shape;rand0
-⍝ Validate ≠ and = scans and reductions
+⍝ Validate ≠ and = scans and reductions.
 
  ⎕PATH←'#.qa'
  ok←1
