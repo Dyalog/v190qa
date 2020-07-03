@@ -36,8 +36,10 @@
 
  array←shape⍴array
  multiple←1<≢types
- force←?shape
- array[⊂force]←seed array ⍝ force at least one element to be non-compactible (if applicable)
+ :If ~0∊shape
+     force←?shape
+     array[⊂force]←seed array ⍝ force at least one element to be non-compactible (if applicable)
+ :EndIf
 
  →0⍴⍨1=t←≢types  ⍝ multiple types?
 
