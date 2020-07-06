@@ -27,20 +27,10 @@
                          rand0+←smf     ⍝ careful - this means we can't use the "default-constrction" of rand0 as the err will show it.
                                     ⍝ Maybe we should have a special "type" for RandomArray to create an array of int+"officially approved smallest float"?
                      :EndIf
-                     :If ~0∊rand0
-                         rand0←rand0×10*0⌊(|10⍟rand0)-⌊0.5×10⍟⌊/⍬  ⍝ avoid DOMAIN ERROR when numbers with large exponents are muliplied
-                         rand0←rand0÷10*0⌈(|10⍟rand0)-⌊0.5×10⍟⌈/⍬  ⍝ avoid DOMAIN ERROR when numbers with large exponents are muliplied
-                     :EndIf
+                     rand0←(rand0⌊2⍟⌊/⍬)⌈⌊-2⍟⌊/⍬  ⍝ ensure rand0 doesn't get too large/low for × or ÷
                      ok∧←check(2-/rand0)≡(¯1↓[rank]rand0)-1↓[rank]rand0
-⍝                     :Trap 11
-:if 1
                      ok∧←check(2+/rand0)≡(¯1↓[rank]rand0)+1↓[rank]rand0
-                         ok∧←check(2×/rand0)≡(¯1↓[rank]rand0)×1↓[rank]rand0
-                     :Else
-                     ↑⎕dm
-                         check 0≡rand0
-                         ⎕←'min and max of rand0: ',(⌊/,rand0),⌊/,rand0
-                     :End
+                     ok∧←check(2×/rand0)≡(¯1↓[rank]rand0)×1↓[rank]rand0
                      ok∧←check(2⌊/rand0)≡(¯1↓[rank]rand0)⌊1↓[rank]rand0
                      ok∧←check(2</rand0)≡(¯1↓[rank]rand0)<1↓[rank]rand0
                      ok∧←check(2>/rand0)≡(¯1↓[rank]rand0)>1↓[rank]rand0
