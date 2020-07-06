@@ -9,8 +9,10 @@
      :For type :In 11 323 645
          cells←1↓?rank⍴10
          rand1←RandomArray 1 type(?rank⍴10)
+         rand1←(rand1⌊2⍟⌊/⍬)⌈⌊-2⍟⌊/⍬  ⍝ ensure rand0 doesn't get too large/low for × or ÷
          :For length :In 2 7 8 9 15 16 17 31 32 33 63 64,?5⍴64
              rand0←RandomArray 0 type(shape←cells,length)
+             rand0←(rand0⌊2⍟⌊/⍬)⌈⌊-2⍟⌊/⍬
              ok∧←check(rand1∘.+rand0)≡rand1(+eop)rand0
              ok∧←check(rand1∘.-rand0)≡rand1(-eop)rand0
              ok∧←check(rand0∘.×rand1)≡rand0(×eop)rand1
