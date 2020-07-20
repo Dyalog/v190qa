@@ -1,4 +1,4 @@
- ok←qa_15116_and_more seed;mat;data;⎕ML;⎕IO;rho;rand1;ind;i2;res;CR;t;i1;offset;shape;d;col;Comp;col∆
+ ok←qa_15116_and_more seed;mat;data;⎕ML;⎕IO;rho;rand1;ind;i2;res;CR;t;i1;offset;shape;d;col;Comp;col∆;SmallSize
 ⍝ SSSE3 code for transposing many ≤16-byte matrices provided leading axes don't change
 ⍝ http://mantis.dyalog.com/view.php?id=15116
 ⍝
@@ -15,6 +15,8 @@
  CR←⎕UCS 13
 
  ⎕PATH←'#.qa'
+ ok←¯1+?128⍴2
+SmallSize←⎕size'ok'  ⍝ the expected size of small object (48b on Unicode, 32b on Classic)
  ok←⎕IO←⎕ML←1
  InitRandom seed
 
@@ -22,7 +24,7 @@
      ⎕FR←(1287 645)[(,1287)⍳type]
      :For rho :In 1 2 4 8 16 128       ⍝ try to find a rho which gives us "small rows" (48= 16 bytes of data + "32 admin-bytes")
          d←RandomArray 0 type(rho)
-         :If 48=⎕SIZE'd' ⋄ :Leave ⋄ :EndIf
+         :If SmallSize=⎕SIZE'd' ⋄ :Leave ⋄ :EndIf
      :EndFor
      :For offset :In 0 ¯1 1  ⍝ try the exact number of columns and also one more or less...
          shape←2↑?100        ⍝ and a random number of rows
@@ -59,9 +61,6 @@
 
     ⍝ index into smalls rows with small row result
          res←i1[1]⌷[1]rand1
-         :If offset=0
-             ok∧←check(,48)≡⎕SIZE'res'       ⍝ ensure small-rowness of result
-         :EndIf
          ok∧←check(rand1[i1[1];])≡res
      :EndFor
 
