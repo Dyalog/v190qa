@@ -31,6 +31,9 @@
  :CaseList 80 160 320
      width←⌊0.1×type
      array←⎕UCS?shape⍴2*width
+ :Case 82
+     width←⌊0.1×type
+     array←⎕AV[shape⍴255]
  :Case 326 ⋄ array←⎕NS¨shape⍴⊂''
  :EndSelect
 
