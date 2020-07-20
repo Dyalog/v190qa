@@ -1,0 +1,11 @@
+ {z}←RunAll StopIfTestFails
+⍝ lazy way to run all test
+ #.qa.StopIfTestFails←(,StopIfTestFails)≡,1
+ z←1
+ z∧←qa_15116_and_more 1
+ z∧←qa_17154 2
+ z∧←qa_17163 3
+ z∧←qa_17191 4
+ z∧←qa_AvoidShiftOverhead 5
+ z∧←qa_OuterMath 6
+ z∧←qa_TackJot 7
