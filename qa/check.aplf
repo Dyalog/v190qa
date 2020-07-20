@@ -1,8 +1,12 @@
  ok←check ok;⎕IO;lc;fn;code;nq;np;im;names;valid;syms;sym;nc;val;shape;rank;subst;qt;id;i;seed;rand;type;deparen;dlb;m
- →ok⍴0
  :If {0::0 ⋄ ⍎⍵}'StopIfTestFails'
-     (⎕LC[2]+1)⎕STOP (2⊃⎕nsi),'.',2⊃⎕SI  ⍝ set stop in calling fn in the line following the one that called us...
+     :If ok
+         {((⎕stop ⍵)~⎕LC[2])⎕STOP⍵}(2⊃⎕NSI),'.',2⊃⎕SI  ⍝ be sure the stop we would set if this test failed is removed (keeping others which the user mayn have wanted!)
+     :Else
+         (⎕LC[2]+1)⎕STOP(2⊃⎕NSI),'.',2⊃⎕SI  ⍝ set stop in calling fn in the line following the one that called us...
+     :EndIf
  :EndIf
+ →ok⍴0
 
  ⍝ Format the failing check to make it easy to repro
 
