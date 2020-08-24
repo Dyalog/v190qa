@@ -6,7 +6,7 @@
  ⍝ shape is the shape of the random array
  ⍝
  ⍝ Example:
- ⍝     rand0←RandomArray 0 (80 163) (10 7) ⍝ 10×7 matrix of UTF-8 chars and 2-byte integers
+ ⍝     rand0←RandomArray 0 (80 163) (10 7) ⍝ 10×7 matrix of single-byte chars and 2-byte integers
 
  ⎕IO←0
 
